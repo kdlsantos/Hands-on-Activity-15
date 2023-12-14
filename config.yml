@@ -1,0 +1,23 @@
+---
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: Installing installations dependencies
+    apt:
+      name:
+        - wget
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Dpkg fixing in Ubuntu Servers
+    shell: |
+      dpkg --configure -a
+    when: ansible_distribution == "Ubuntu"
+
+- hosts: controller_node
+  become: true
+  roles:
+    - neutron
+    - horizon
+    - cinder
